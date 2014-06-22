@@ -43,7 +43,7 @@ describe PhotosController do
 
   describe '#create' do
     before do
-      @controller.stub!(:file_handler).and_return(uploaded_photo)
+      @controller.stub(:file_handler).and_return(uploaded_photo)
       @params = {:photo => {:user_file => uploaded_photo, :aspect_ids => "all"} }
     end
 
@@ -101,6 +101,14 @@ describe PhotosController do
       response.headers['Content-Type'].should match 'application/json.*'
       save_fixture(response.body, "photos_json")
     end
+    
+    it 'displays by date of creation' do
+      max_time = bob.photos.first.created_at - 1.day
+      get :index, person_id: bob.person.guid.to_s, 
+                  max_time: max_time.to_i
+
+      assigns[:posts].should be_empty
+    end
   end
 
   describe '#edit' do
@@ -128,7 +136,7 @@ describe PhotosController do
     end
 
     it 'sends a retraction on delete' do
-      @controller.stub!(:current_user).and_return(alice)
+      @controller.stub(:current_user).and_return(alice)
       alice.should_receive(:retract).with(@alices_photo)
       delete :destroy, :id => @alices_photo.id
     end

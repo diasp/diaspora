@@ -8,7 +8,9 @@ app.views.PublisherUploader = Backbone.View.extend({
   allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'tif', 'tiff'],
   sizeLimit: 4194304,  // bytes
 
-  initialize: function() {
+  initialize: function(opts) {
+    this.publisher = opts.publisher;
+
     this.uploader = new qq.FileUploaderBasic({
       element: this.el,
       button:  this.el,
@@ -31,14 +33,17 @@ app.views.PublisherUploader = Backbone.View.extend({
     });
 
     this.el_info = $('<div id="fileInfo" />');
-    this.options.publisher.el_wrapper.before(this.el_info);
+    this.publisher.el_wrapper.before(this.el_info);
 
-    this.options.publisher.el_photozone.on('click', '.x', _.bind(this._removePhoto, this));
+    this.publisher.el_photozone.on('click', '.x', _.bind(this._removePhoto, this));
   },
 
   progressHandler: function(id, fileName, loaded, total) {
     var progress = Math.round(loaded / total * 100);
     this.el_info.text(fileName + ' ' + progress + '%').fadeTo(200, 1);
+    this.publisher.el_photozone
+      .find('li.loading').first().find('.bar')
+      .width(progress + '%');
   },
 
   submitHandler: function(id, fileName) {
@@ -48,13 +53,14 @@ app.views.PublisherUploader = Backbone.View.extend({
 
   // add photo placeholders to the publisher to indicate an upload in progress
   _addPhotoPlaceholder: function() {
-    var publisher = this.options.publisher;
+    var publisher = this.publisher;
     publisher.setButtonsEnabled(false);
 
     publisher.el_wrapper.addClass('with_attachments');
     publisher.el_photozone.append(
       '<li class="publisher_photo loading" style="position:relative;">' +
-      '  <img src="'+Handlebars.helpers.imageUrl('ajax-loader2.gif')+'" alt="" />'+
+      '  <div class="progress progress-striped active"><div class="bar"></div></div>' +
+      '  <img src="'+Handlebars.helpers.imageUrl('ajax-loader2.gif')+'" class="ajax-loader" alt="" />'+
       '</li>'
     );
   },
@@ -72,13 +78,18 @@ app.views.PublisherUploader = Backbone.View.extend({
       this._cancelPhotoUpload();
       this.trigger('change');
       this.el_info.text(Diaspora.I18n.t('photo_uploader.error', {file: fileName}));
+      this.publisher.el_wrapper.find('#photodropzone_container').first().after(
+        '<div id="upload_error">' + 
+        Diaspora.I18n.t('photo_uploader.error', {file: fileName}) + 
+        '</div>'
+      );
     }
   },
 
   // replace the first photo placeholder with the finished uploaded image and
   // add the id to the publishers form
   _addFinishedPhoto: function(id, url) {
-    var publisher = this.options.publisher;
+    var publisher = this.publisher;
 
     // add form input element
     publisher.$('.content_creation form').append(
@@ -89,11 +100,13 @@ app.views.PublisherUploader = Backbone.View.extend({
     var placeholder = publisher.el_photozone.find('li.loading').first();
     placeholder
       .removeClass('loading')
-      .append(
-        '<div class="x">X</div>'+
+      .prepend(
+        '<div class="x"></div>'+
         '<div class="circle"></div>'
        )
-      .find('img').attr({'src': url, 'data-id': id});
+      .find('img').attr({'src': url, 'data-id': id}).removeClass('ajax-loader');
+    placeholder
+      .find('div.progress').remove();
 
     // no more placeholders? enable buttons
     if( publisher.el_photozone.find('li.loading').length == 0 ) {
@@ -103,7 +116,7 @@ app.views.PublisherUploader = Backbone.View.extend({
   },
 
   _cancelPhotoUpload: function() {
-    var publisher = this.options.publisher;
+    var publisher = this.publisher;
     var placeholder = publisher.el_photozone.find('li.loading').first();
     placeholder
       .removeClass('loading')
@@ -125,9 +138,9 @@ app.views.PublisherUploader = Backbone.View.extend({
         $.when(photo.fadeOut(400)).then(function(){
           photo.remove();
 
-          if( self.options.publisher.$('.publisher_photo').length == 0 ) {
+          if( self.publisher.$('.publisher_photo').length == 0 ) {
             // no more photos left...
-            self.options.publisher.el_wrapper.removeClass('with_attachments');
+            self.publisher.el_wrapper.removeClass('with_attachments');
           }
 
           self.trigger('change');

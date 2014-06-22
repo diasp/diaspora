@@ -26,7 +26,7 @@ class Post < ActiveRecord::Base
   belongs_to :o_embed_cache
   belongs_to :open_graph_cache
 
-  after_create do
+  after_commit :on => :create do
     self.touch(:interacted_at)
   end
 
@@ -70,6 +70,9 @@ class Post < ActiveRecord::Base
   #prevents error when trying to access @post.address in a post different than Reshare and StatusMessage types;
   #check PostPresenter
   def address
+  end
+
+  def poll
   end
 
   def self.excluding_blocks(user)

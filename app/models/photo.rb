@@ -46,12 +46,12 @@ class Photo < ActiveRecord::Base
   before_destroy :ensure_user_picture
   after_destroy :clear_empty_status_message
 
-  after_create do
+  after_commit :on => :create do
     queue_processing_job if self.author.local?
   end
 
   def clear_empty_status_message
-    if self.status_message_guid && self.status_message.text_and_photos_blank?
+    if self.status_message && self.status_message.text_and_photos_blank?
       self.status_message.destroy
     else
       true

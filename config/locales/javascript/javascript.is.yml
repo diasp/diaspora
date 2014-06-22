@@ -16,11 +16,8 @@ is:
       started_sharing_with: "You have started sharing with <%= name %>!"
       stopped_sharing_with: "You have stopped sharing with <%= name %>."
       toggle:
-        few: "In {{count}} aspects"
-        many: "In {{count}} aspects"
         one: "In <%= count %> aspect"
         other: "In <%= count %> aspects"
-        two: "In <%= count %> aspects"
         zero: "Add to aspect"
     aspect_navigation:
       add_an_aspect: "+ Bæta við sýn"
@@ -52,7 +49,6 @@ is:
       home: "Heim"
       log_out: "Aftengjast"
       mark_all_as_read: "Merkja allt sem lesið"
-      messages: "Skilaboð"
       notifications: "Tilkynningar"
       profile: "Síðan mín"
       recent_notifications: "Nýlegar tilkynningar"
@@ -64,6 +60,9 @@ is:
       no_more: "Engin fleirri skeyti."
       no_more_contacts: "Engir fleirri tengiliðir"
     my_aspects: "Mínar sýnir"
+    notifications:
+      mark_read: "Merkja sem lesið"
+      mark_unread: "Merkja sem ólesið"
     people:
       not_found: "og enginn fannst..."
     photo_uploader:
@@ -72,6 +71,10 @@ is:
       invalid_ext: "{file} hefur ógilt viðskeyti. Aðeins {extensions} eru leyfð."
       looking_good: "Vá, þú lítur vel út!"
       size_error: "{file} skráin er of stór, mesta stærð er {sizeLimit}."
+    poll:
+      close_result: "Fela niðurstöður"
+      result: "Niðurstaða"
+      show_result: "Birta niðurstöður"
     publisher:
       at_least_one_aspect: "Þú verður að opna á að minnsta kosti eina sýn"
       limited: "Takmarkað - skeytið verður eingögnu sýnilegt þeim sem þú veitir leyfi"
@@ -94,20 +97,14 @@ is:
       hide_nsfw_posts: "Fela skeyti sem hennta ekki vinnu"
       like: "Líka við"
       likes:
-        few: "<%= count %> Likes"
-        many: "<%= count %> Likes"
-        one: "<%= count %> Like"
-        other: "<%= count %> Likes"
-        two: "<%= count %> Likes"
-        zero: "<%= count %> Likes"
+        one: "<%= count %> líkar"
+        other: "<%= count %> líkar"
+        zero: "<%= count %> líkar"
       limited: "Takmarkað"
       more_comments:
-        few: "Show <%= count %> more comments"
-        many: "Show <%= count %> more comments"
-        one: "Show <%= count %> more comment"
-        other: "Show <%= count %> more comments"
-        two: "Show <%= count %> more comments"
-        zero: "Show <%= count %> more comments"
+        one: "Birta <%= count %> athugasemd til viðbótar"
+        other: "Birta <%= count %> athugasemdir til viðbótar"
+        zero: "Birta <%= count %> athugasemd til viðbótar"
       original_post_deleted: "Upphaflegi höfundurinn hefur eytt skeytinu."
       public: "Aðengilegt"
       reshare: "Deila áfram"

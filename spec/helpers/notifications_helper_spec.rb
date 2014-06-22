@@ -34,23 +34,23 @@ describe NotificationsHelper do
         @ilya = FactoryGirl.create(:person)
         @ilya.profile.first_name = 'ilya'
         @ilya.profile.last_name = 'zhit'
-        @note = mock()
+        @note = double()
       end
 
       it 'with two, does not comma seperate two actors' do
-        @note.stub!(:actors).and_return([@max, @sarah])
+        @note.stub(:actors).and_return([@max, @sarah])
         output.scan(/,/).should be_empty
         output.scan(/and/).count.should be 1
       end
 
       it 'with three, comma seperates the first two, and and the last actor' do
-        @note.stub!(:actors).and_return([@max, @sarah, @daniel])
+        @note.stub(:actors).and_return([@max, @sarah, @daniel])
         output.scan(/,/).count.should be 2
         output.scan(/and/).count.should be 1
       end
 
       it 'with more than three, lists the first three, then the others tag' do
-        @note.stub!(:actors).and_return([@max, @sarah, @daniel, @ilya])
+        @note.stub(:actors).and_return([@max, @sarah, @daniel, @ilya])
         output.scan(/,/).count.should be 3
         output.scan(/and/).count.should be 2
       end
@@ -77,7 +77,7 @@ describe NotificationsHelper do
         output.should include I18n.t("#{@notification.popup_translation_key}",
                                      :actors => notification_people_link(@notification),
                                      :count => @notification.actors.count,
-                                     :post_link => "<a href=\"#{post_path(@post)}\" class=\"hard_object_link\" data-ref=\"#{@post.id}\">#{t('notifications.post')}</a>")
+                                     :post_link => link_to(post_page_title(@post), post_path(@post), 'data-ref' => @post.id, :class => 'hard_object_link').html_safe)
       end
 
       context 'when post is deleted' do

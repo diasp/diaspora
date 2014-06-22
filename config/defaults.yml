@@ -4,7 +4,7 @@
 
 defaults:
   version:
-    number: "head" # Do not touch unless doing a release, do not backport the version number that's in master but keep develp to always say "head"
+    number: "0.4.0.0" # Do not touch unless doing a release, do not backport the version number that's in master but keep develop to always say "head"
   heroku: false
   environment:
     url: "http://localhost:3000/"
@@ -52,6 +52,7 @@ defaults:
     statistics:
       user_counts: false
       post_counts: false
+      comment_counts: false
   settings:
     pod_name: 'diaspora*'
     enable_registrations: true
@@ -82,6 +83,12 @@ defaults:
       - 'support'
       - 'contact'
       - 'example_user1dsioaioedfhgoiesajdigtoearogjaidofgjo'
+    captcha:
+      enable: true
+      image_size: '120x20'
+      captcha_length: 5
+      image_style: 'simply_green'
+      distortion: 'low'
   services:
     facebook:
       enable: false

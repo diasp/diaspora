@@ -48,64 +48,64 @@ describe User do
   end
 
   describe 'yearly_actives' do
-    it 'returns list which includes users who latest signed in within last year' do
+    it 'returns list which includes users within last year' do
       user = FactoryGirl.build(:user)
-      user.last_sign_in_at = Time.now - 1.month
+      user.last_seen = Time.now - 1.month
       user.save
       User.yearly_actives.should include user
     end
 
-    it 'returns list which does not include users who did not sign in within last year' do
+    it 'returns list which does not include users seen within last year' do
       user = FactoryGirl.build(:user)
-      user.last_sign_in_at = Time.now - 2.year
+      user.last_seen = Time.now - 2.year
       user.save
       User.yearly_actives.should_not include user
     end
   end
 
   describe 'monthly_actives' do
-    it 'returns list which includes users who latest signed in within last month' do
+    it 'returns list which includes users seen within last month' do
       user = FactoryGirl.build(:user)
-      user.last_sign_in_at = Time.now - 1.day
+      user.last_seen = Time.now - 1.day
       user.save
       User.monthly_actives.should include user
     end
 
-     it 'returns list which does not include users who did not sign in within last month' do
+     it 'returns list which does not include users seen within last month' do
       user = FactoryGirl.build(:user)
-      user.last_sign_in_at = Time.now - 2.month
+      user.last_seen = Time.now - 2.month
       user.save
       User.monthly_actives.should_not include user
     end
   end
 
   describe 'daily_actives' do
-    it 'returns list which includes users who latest signed in within last day' do
+    it 'returns list which includes users seen within last day' do
       user = FactoryGirl.build(:user)
-      user.last_sign_in_at = Time.now - 1.hour
+      user.last_seen = Time.now - 1.hour
       user.save
       User.daily_actives.should include(user)
     end
 
-    it 'returns list which does not include users who did not sign in within last day' do
+    it 'returns list which does not include users seen within last day' do
       user = FactoryGirl.build(:user)
-      user.last_sign_in_at = Time.now - 2.day
+      user.last_seen = Time.now - 2.day
       user.save
       User.daily_actives.should_not include(user)
     end
   end
-  
+
   describe 'halfyear_actives' do
-    it 'returns list which includes users who latest signed in within half a year' do
+    it 'returns list which includes users seen within half a year' do
       user = FactoryGirl.build(:user)
-      user.last_sign_in_at = Time.now - 4.month
+      user.last_seen = Time.now - 4.month
       user.save
       User.halfyear_actives.should include user
     end
 
-     it 'returns list which does not include users who did not sign in within the last half a year' do
+     it 'returns list which does not include users seen within the last half a year' do
       user = FactoryGirl.build(:user)
-      user.last_sign_in_at = Time.now - 7.month
+      user.last_seen = Time.now - 7.month
       user.save
       User.halfyear_actives.should_not include user
     end
@@ -316,7 +316,7 @@ describe User do
         alice.should_not be_valid
       end
 
-      it "requires a vaild email address" do
+      it "requires a valid email address" do
         alice.email = "somebody@anywhere"
         alice.should_not be_valid
       end
@@ -336,7 +336,7 @@ describe User do
         alice.should be_valid
       end
 
-      it "requires a vaild unconfirmed_email address" do
+      it "requires a valid unconfirmed_email address" do
         alice.unconfirmed_email = "somebody@anywhere"
         alice.should_not be_valid
       end
@@ -835,7 +835,7 @@ describe User do
 
   describe '#retract' do
     before do
-      @retraction = mock
+      @retraction = double
       @post = FactoryGirl.build(:status_message, :author => bob.person, :public => true)
     end
 
@@ -846,7 +846,7 @@ describe User do
       end
 
       it 'sends a retraction' do
-        dispatcher = mock
+        dispatcher = double
         Postzord::Dispatcher.should_receive(:build).with(bob, @retraction, anything()).and_return(dispatcher)
         dispatcher.should_receive(:post)
 
@@ -858,7 +858,7 @@ describe User do
         reshare = FactoryGirl.create(:reshare, :root => @post, :author => person)
         @post.reshares << reshare
 
-        dispatcher = mock
+        dispatcher = double
         Postzord::Dispatcher.should_receive(:build).with(bob, @retraction, {:additional_subscribers => [person], :services => anything}).and_return(dispatcher)
         dispatcher.should_receive(:post)
 
@@ -868,20 +868,6 @@ describe User do
   end
 
   describe "#send_reset_password_instructions" do
-    it "generates a reset password token if it's supposed to" do
-      user = User.new
-      user.stub!(:should_generate_reset_token?).and_return(true)
-      user.should_receive(:generate_reset_password_token)
-      user.send_reset_password_instructions
-    end
-
-    it "does not generate a reset password token if it's not supposed to" do
-      user = User.new
-      user.stub!(:should_generate_reset_token?).and_return(false)
-      user.should_not_receive(:generate_reset_password_token)
-      user.send_reset_password_instructions
-    end
-
     it "queues up a job to send the reset password instructions" do
       user = FactoryGirl.create :user
       Workers::ResetPassword.should_receive(:perform_async).with(user.id)
@@ -925,9 +911,9 @@ describe User do
           AppConfig.settings.autofollow_on_join = true
           AppConfig.settings.autofollow_on_join_user = 'one'
 
-          wf_mock = mock
-          wf_mock.should_receive(:fetch)
-          Webfinger.should_receive(:new).with('one').and_return(wf_mock)
+          wf_double = double
+          wf_double.should_receive(:fetch)
+          Webfinger.should_receive(:new).with('one').and_return(wf_double)
 
           user.seed_aspects
         end
@@ -1014,8 +1000,39 @@ describe User do
           auto_follow_back_aspect_id
           unconfirmed_email
           confirm_email_token
+          last_seen
         }.sort
       end
+    end
+  end
+  
+  describe "sign up" do
+    before do
+      params = {:username => "ohai",
+                :email => "ohai@example.com",
+                :password => "password",
+                :password_confirmation => "password",
+                :captcha => "12345",
+                
+                :person =>
+                  {:profile =>
+                    {:first_name => "O",
+                     :last_name => "Hai"}
+                  }
+      }
+      @user = User.build(params)
+    end
+
+    it "saves with captcha off" do
+      AppConfig.settings.captcha.enable = false
+      @user.should_receive(:save).and_return(true)
+      @user.sign_up
+    end
+
+    it "saves with captcha on" do
+      AppConfig.settings.captcha.enable = true
+      @user.should_receive(:save_with_captcha).and_return(true)
+      @user.sign_up
     end
   end
 end

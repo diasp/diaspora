@@ -29,7 +29,6 @@ et:
       home: "Avaleht"
       log_out: "Logi välja"
       mark_all_as_read: "Märgi kõik loetuks"
-      messages: "Sõnumid"
       notifications: "Teatised"
       profile: "Profiil"
       recent_notifications: "Äsjased teatised"
@@ -58,16 +57,19 @@ et:
       likes:
         one: "<%= count %> meeldimine"
         other: "<%= count %> meeldimist"
+        zero: "<%= count %> meeldimist"
       limited: "Piiratud"
       more_comments:
         one: "Näita veel <%= count %> kommentaari"
         other: "Näita veel <%= count %> kommentaari"
+        zero: "Näita veel <%= count %> kommentaari"
       original_post_deleted: "Postitus on autori poolt eemaldatud."
       public: "Avalik"
       reshare: "Jaga edasi"
       reshares:
         one: "<%= count %> edasijagamine"
         other: "<%= count %> edasijagamist"
+        zero: "<%= count %> edasijagamist"
       show_nsfw_post: "Näita postitust"
       show_nsfw_posts: "Näita kõiki"
       unfollow: "Lõpeta jälgimine"

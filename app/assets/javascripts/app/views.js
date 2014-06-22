@@ -9,11 +9,6 @@ app.views.Base = Backbone.View.extend({
   },
 
   setupRenderEvents : function(){
-    if(this.model) {
-      //this should be in streamobjects view
-      this.model.bind('remove', this.remove, this);
-    }
-
     // this line is too generic.  we usually only want to re-render on
     // feedback changes as the post content, author, and time do not change.
     //
@@ -86,12 +81,68 @@ app.views.Base = Backbone.View.extend({
     }
   },
 
+  report: function(evt) {
+    if(evt) { evt.preventDefault(); }
+    var msg = prompt(Diaspora.I18n.t('report.prompt'), Diaspora.I18n.t('report.prompt_default'));
+    if (msg == null) {
+      return;
+    }
+    var data = {
+      report: {
+        item_id: this.model.id,
+        item_type: $(evt.currentTarget).data("type"),
+        text: msg
+      }
+    };
+
+    var report = new app.models.Report();
+    report.save(data, {
+      success: function(model, response) {
+        Diaspora.page.flashMessages.render({
+          success: true,
+          notice: Diaspora.I18n.t('report.status.created')
+        });
+      },
+      error: function(model, response) {
+        Diaspora.page.flashMessages.render({
+          success: false,
+          notice: Diaspora.I18n.t('report.status.exists')
+        });
+      }
+    });
+  },
+
   destroyModel: function(evt) {
     evt && evt.preventDefault();
+    var self = this;
+    var url = this.model.urlRoot + '/' + this.model.id;
+
     if (confirm(Diaspora.I18n.t("confirm_dialog"))) {
-      this.model.destroy();
-      this.remove();
+      this.model.destroy({ url: url })
+        .done(function() {
+          self.remove();
+        })
+        .fail(function() {
+          var flash = new Diaspora.Widgets.FlashMessages;
+          flash.render({
+            success: false,
+            notice: Diaspora.I18n.t('failed_to_remove')
+          });
+        });
     }
-  }
+  },
 });
 
+app.views.StaticContentView = app.views.Base.extend({
+
+  initialize : function(options) {
+    this.templateName = options.templateName;
+    this.data = options.data;
+
+    return this;
+  },
+
+  presenter : function(){
+    return this.data;
+  },
+});

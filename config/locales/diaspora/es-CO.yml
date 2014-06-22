@@ -78,8 +78,8 @@ es-CO:
       success: "%{name} fue eliminado exitosamente."
     edit:
       add_existing: "Añade un contacto existente"
-      aspect_list_is_not_visible: "la lista de aspectospermanece oculta a los demás en este aspecto"
-      aspect_list_is_visible: "la lista de aspectos es visible a los demás en este aspecto"
+      aspect_list_is_not_visible: "La lista de aspectos permanece oculta a los demás en este aspecto"
+      aspect_list_is_visible: "La lista de aspectos es visible a los demás en este aspecto"
       confirm_remove_aspect: "¿Estás seguro que quieres eliminar este aspecto?"
       done: "Hecho"
       make_aspect_list_visible: "¿Hacer visibles entre ellos a los contactos de este aspecto?"
@@ -93,10 +93,6 @@ es-CO:
       aspect_not_empty: "El aspecto no está vacío"
       remove: "eliminar"
     index:
-      cubbies:
-        explanation: "Cubbi.es es la primera aplicación en desarrollo de Diaspora."
-        heading: "Conectar a Cubbi.es"
-        learn_more: "Aprende más"
       diaspora_id:
         content_1: "Tu ID de Diaspora es:"
         content_2: "Dáselo a quien quieras y podrán encontrarte en Diaspora."
@@ -220,10 +216,7 @@ es-CO:
         other: "%{count} mensajes nuevos"
         zero: "No hay mensajes nuevos"
     index:
-      create_a_new_message: "crear un nuevo mensaje"
       inbox: "Buzón de Entrada"
-      message_inbox: "Bandeja de Entrada"
-      new_message: "Nuevo Mensaje"
       no_conversation_selected: "ninguna conversación seleccionada"
       no_messages: "no hay mensajes"
     new:
@@ -232,8 +225,6 @@ es-CO:
       sending: "Enviando..."
       subject: "asunto"
       to: "a"
-    new_message:
-      fail: "Mensaje inválido"
     show:
       delete: "eliminar y bloquer conversación"
       reply: "responder"
@@ -385,10 +376,8 @@ es-CO:
       edit_membership: "editar miembros del aspecto"
     few: "%{count} personas"
     helper:
-      people_on_pod_are_aware_of: " la gente en el servidor está consciente de"
       results_for: " resultados para %{params}"
     index:
-      couldnt_find_them_send_invite: "¿No los pudiste encontrar? ¡Envíales una invitación!"
       looking_for: "¿Buscando publicaciones etiquetadas con %{tag_link}?"
       no_one_found: "…no se encontró a nadie."
       no_results: "¡Oye! Necesitas buscar algo."
@@ -398,6 +387,7 @@ es-CO:
     other: "%{count} personas"
     person:
       add_contact: "añadir contacto"
+      already_connected: "Ya estás conectado"
       pending_request: "Solicitud pendiente"
       thats_you: "¡Ese eres tú!"
     profile_sidebar:
@@ -475,6 +465,18 @@ es-CO:
   privacy: "Privacidad"
   privacy_policy: "Política de Privacidad"
   profile: "Perfil"
+  profiles:
+    edit:
+      first_name: "Nombre"
+      last_name: "Apellido"
+      your_bio: "Biografía"
+      your_birthday: "Cumpleaños"
+      your_gender: "Género"
+      your_name: "Tu Nombre"
+      your_private_profile: "Tu Perfil Privado"
+      your_public_profile: "Tu Perfil Público"
+      your_tags: "Descríbete en 5 palabras"
+      your_tags_placeholder: "como #películas #gatos #viajes #profesor #bogotá"
   public: "Público"
   reactions:
     one: "%{count} reacción"
@@ -482,6 +484,9 @@ es-CO:
     zero: "Ninguna reacción"
   search: "Buscar"
   settings: "Configuración"
+  share_visibilites:
+    update:
+      post_hidden_and_muted: "La publicación de %{name} se ha ocultado, así como las notificaciones."
   terms_and_conditions: "Términos y Condiciones"
   undo: "¿Deshacer?"
   username: "Nombre de usuario"

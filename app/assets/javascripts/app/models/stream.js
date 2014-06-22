@@ -15,17 +15,22 @@ app.models.Stream = Backbone.Collection.extend({
     return _.any(this.items.models) ? this.timeFilteredPath() : this.basePath()
   },
 
-  fetch: function() {
-    if(this.isFetching()){ return false }
-    var url = this.url()
-    this.deferred = this.items.fetch({
-        add : true,
-        url : url
-    }).done(_.bind(this.triggerFetchedEvents, this))
+  _fetchOpts: function(opts) {
+    var defaultOpts = {
+      remove: false  // tell backbone to keep existing items in the collection
+    };
+    return _.extend({}, defaultOpts, opts);
   },
 
-  isFetching : function(){
-    return this.deferred && this.deferred.state() == "pending"
+  fetch: function() {
+    if( this.isFetching() ) return false;
+    var url = this.url();
+    this.deferred = this.items.fetch(this._fetchOpts({url : url}))
+      .done(_.bind(this.triggerFetchedEvents, this));
+  },
+
+  isFetching : function() {
+    return (this.deferred && this.deferred.state() == "pending");
   },
 
   triggerFetchedEvents : function(resp){
@@ -56,7 +61,7 @@ app.models.Stream = Backbone.Collection.extend({
 
   /* This function is for adding a large number of posts one by one.
    * Mainly used by backbone when loading posts from the server
-   * 
+   *
    * After adding the posts, you have to trigger "fetched" on the
    * stream for the changes to take effect in the infinite stream view
    */

@@ -53,7 +53,7 @@ describe("app.views.CommentStream", function(){
       });
 
       it("adds the comment to the view", function() {
-        this.request.response({status: 200});
+        this.request.response({status: 200, responseText: '[]'});
         expect(this.view.$(".comment-content p").text()).toEqual("a new comment");
       });
 
@@ -81,11 +81,10 @@ describe("app.views.CommentStream", function(){
 
   describe("appendComment", function(){
     it("appends this.model as 'parent' to the comment", function(){
-      var comment = new app.models.Comment(factory.comment())
-
-      spyOn(comment, "set")
-      this.view.appendComment(comment)
-      expect(comment.set).toHaveBeenCalled()
+      var comment = factory.comment();
+      spyOn(comment, "set");
+      this.view.appendComment(comment);
+      expect(comment.set).toHaveBeenCalled();
     });
   });
 
@@ -99,7 +98,10 @@ describe("app.views.CommentStream", function(){
 
       this.view.expandComments();
 
-      mostRecentAjaxRequest().response({ comments : [] });
+      mostRecentAjaxRequest().response({ 
+        status: 200,
+        responseText: JSON.stringify([factory.comment()])
+      });
 
       expect(this.view.$("textarea").val()).toEqual("great post!");
     });

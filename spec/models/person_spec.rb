@@ -107,7 +107,7 @@ describe Person do
     end
   end
 
-  describe "vaild url" do
+  describe "valid url" do
     it 'should allow for https urls' do
       person = FactoryGirl.build(:person, :url => "https://example.com")
       person.should be_valid
@@ -492,7 +492,7 @@ describe Person do
 
     describe '.url_batch_update' do
       it "calls #update_person_url given an array of users and a url" do
-        people = [stub.as_null_object, stub.as_null_object, stub.as_null_object]
+        people = [double.as_null_object, double.as_null_object, double.as_null_object]
         people.each do |person|
           person.should_receive(:update_url).with(@url)
         end

@@ -1,9 +1,9 @@
 app.Router = Backbone.Router.extend({
   routes: {
+    "help": "help",
+
     //new hotness
     "posts/:id": "singlePost",
-    "posts/:id/next": "siblingPost",
-    "posts/:id/previous": "siblingPost",
     "p/:id": "singlePost",
 
     //oldness
@@ -23,20 +23,22 @@ app.Router = Backbone.Router.extend({
     "people/:id": "stream",
     "u/:name": "stream"
   },
+  
+  initialize: function() {
+    // To support encoded linefeeds (%0A) we need to specify
+    // our own internal router.route call with the correct regexp.
+    // see: https://github.com/diaspora/diaspora/issues/4994#issuecomment-46431124
+    this.route(/^bookmarklet(?:\?(.*))?/, "bookmarklet");
+  },
+
+  help: function() {
+    app.help = new app.views.Help();
+    $("#help").prepend(app.help.el);
+    app.help.render();
+  },
 
   singlePost : function(id) {
     this.renderPage(function(){ return new app.pages.SinglePostViewer({ id: id })});
-  },
-
-  siblingPost : function(){ //next or previous
-    var post = new app.models.Post();
-    post.bind("change", setPreloadAttributesAndNavigate)
-    post.fetch({url : window.location})
-
-    function setPreloadAttributesAndNavigate(){
-      window.gon.preloads.post = post.attributes
-      app.router.navigate(post.url(), {trigger:true, replace: true})
-    }
   },
 
   renderPage : function(pageConstructor){
@@ -115,5 +117,12 @@ app.Router = Backbone.Router.extend({
     if(this.followedTagsView && Backbone.history.fragment != "followed_tags")
       this.followedTagsView.hideFollowedTags();
   },
+
+  bookmarklet: function() {
+    var contents = (window.gon) ? gon.preloads.bookmarklet : {}
+    app.bookmarklet = new app.views.Bookmarklet(
+      _.extend({}, {el: $('#bookmarklet')}, contents)
+    ).render();
+  }
 });
 

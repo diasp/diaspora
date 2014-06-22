@@ -159,10 +159,6 @@ bs:
       aspect_not_empty: "Aspekti nisu prazni"
       remove: "ukloni"
     index:
-      cubbies:
-        explanation: "Cubbi.es je prva Diaspora aplikacija u razvoju."
-        heading: "Poveži na Cubbi.es"
-        learn_more: "Nauči više"
       diaspora_id:
         content_1: "Vaš Diaspora ID je:"
         content_2: "Dajte bilo kome i oni će vas moći naći na Diaspori."
@@ -236,14 +232,6 @@ bs:
       failure: "Vaš aspekt, %{name}, ima predugo ime da bi se snimilo."
       success: "Vaš aspekt, %{name}, je uspješno uređen."
     zero: "nema aspekata"
-  authorizations:
-    index:
-      no_applications: "Niste registrovali još ni jednu aplikaciju."
-      revoke_access: "Opozovi Pristup"
-    new:
-      authorize: "Ovlasti"
-      cubbies_will: "Cubbies će biti u mogućnosti da objavljuju fotografije u vaše ime"
-      nope: "Ne"
   back: "Nazad"
   blocks:
     create:
@@ -315,10 +303,7 @@ bs:
         other: "%{count} novih poruka"
         zero: "Nema novih poruka"
     index:
-      create_a_new_message: "kreiraj novu poruku"
       inbox: "Pošta"
-      message_inbox: "Poruke Pošte"
-      new_message: "Nova Poruka"
       no_conversation_selected: "ni jedan razgovor nije odabran"
       no_messages: "nema poruka"
     new:
@@ -327,8 +312,6 @@ bs:
       sending: "Slanje..."
       subject: "predmet"
       to: "za"
-    new_message:
-      fail: "Nevažeća poruka"
     show:
       delete: "izbriši i blokiraj razgovor"
       reply: "odgovor"
@@ -638,16 +621,13 @@ bs:
     helper:
       is_not_sharing: "%{name} ne dijeli s vama"
       is_sharing: "%{name} dijeli s vama"
-      people_on_pod_are_aware_of: " ljudi na podu su svjesni o"
       results_for: " rezultati za %{params}"
     index:
-      couldnt_find_them_send_invite: "Niste ih mogli pronaći?  Pošaljite im pozivnicu!"
       looking_for: "Tražite objave označene sa %{tag_link}?"
       no_one_found: "...i niko nije pronađen."
       no_results: "Hej! Trebate tražiti nešto."
       results_for: "rezultati pretrage za"
       searching: "pretraživanje, molimo budite strpljivi"
-    last_post: "Zadnja Objava"
     many: "%{count} ljudi"
     one: "1 osoba"
     other: "%{count} ljudi"
@@ -748,8 +728,6 @@ bs:
       first_name: "Ime"
       last_name: "Prezime"
       update_profile: "Ažuriraj Profil"
-      you_are_nsfw: "Označili ste se nesigurnim za posao, vaš sadržaj se neće pojavljivati kod ljudi koji su se opredijelili za nevidljivost neprihvatljivog sadržaja toka."
-      you_are_safe_for_work: "Označili ste se sigurnim za posao, ovo znači da se slažete da će se sadržaj koji objavljujete slagati sa smjernicama zajednice."
       your_bio: "Vaša biografija"
       your_birthday: "Vaš rođendan"
       your_gender: "Vaš spol"
@@ -1017,7 +995,6 @@ bs:
   tags:
     show:
       follow: "Prati #%{tag}"
-      followed_by: "praćeno od"
       following: "Pratim #%{tag}"
       nobody_talking: "Niko još ne razgovara o %{tag}"
       none: "Prazna oznaka ne postoji!"
@@ -1025,18 +1002,6 @@ bs:
       posts_tagged_with: "Objave označene sa #%{tag}"
       stop_following: "Zaustavi Praćenje #%{tag}"
   terms_and_conditions: "Uvjeti i Stanja"
-  tokens:
-    show:
-      connect_to_cubbies: "Poveži na Cubbi.es"
-      connecting_is_simple: "Povezivanje vašeg Diaspora računa je jednostavno!  Samo unesite svoj Diaspora ID (<b>%{diaspora_id}</b>) sa vaše cubbies <a href='%{href_link}'> stranice postavki</a> i pritisnite poveži."
-      daniels_account: "Danielov Diaspora račun"
-      love_to_try: "Voljeli bi za vas da isprobate."
-      making_the_connection: "Pravim Vezu"
-      screenshot_explanation: "%{link1}.  Ovaj posebni cubby je povezan na %{link2}."
-      sign_up_today: "Registrujte se danas!"
-      typical_userpage: "Tipična cubbi.es korisnička stranica"
-      via: "(putem %{link})"
-      what_is_cubbies: "Cubbie.es je svjetska prva Diaspora aplikacija.  Također predstavlja najbolji način da saberete fotografije na internetu."
   undo: "Poništi?"
   username: "Korisničko ime"
   users:

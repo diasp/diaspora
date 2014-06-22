@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe EmailInviter do
   before do
-    @user = stub(:invitation_code => 'coolcodebro', :present? => true, 
+    @user = double(:invitation_code => 'coolcodebro', :present? => true, 
                  :email => 'foo@bar.com')
     @emails = "mbs333@gmail.com, foo1@bar.com maxwell@dude.com"
   end
@@ -39,6 +39,11 @@ describe EmailInviter do
     it 'defaults to english' do
       inviter = EmailInviter.new(@emails, @user)
       inviter.locale.should == 'en'
+    end
+
+    it 'should symbolize keys' do
+      inviter = EmailInviter.new(@emails, @user, 'locale' => 'es')
+      inviter.locale.should == 'es'
     end
 
     it 'listens to the langauge option' do

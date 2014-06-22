@@ -27,6 +27,10 @@ fi:
       deselect_all: "Poista valinnat"
       no_aspects: "Näkymiä ei ole valittu"
       select_all: "Valitse kaikki"
+    bookmarklet:
+      post_something: "Lähetä julkaisu Diasporaan"
+      post_submit: "Lähettää julkaisua..."
+      post_success: "Julkaistu! Suljetaan ponnahdusikkuna"
     comma: ","
     comments:
       hide: "piilota kommentit"
@@ -39,6 +43,7 @@ fi:
     edit: "Muokkaa"
     failed_to_like: "Tykkääminen epäonnistui!"
     failed_to_post_message: "Viestin lähetys epäonnistui!"
+    failed_to_remove: "Lisäyksen poistaminen epäonnistui!"
     getting_started:
       alright_ill_wait: "Okei, minä odotan."
       hey: "Hei <%= name %>!"
@@ -48,11 +53,11 @@ fi:
       admin: "Ylläpitäjä"
       close: "sulje"
       contacts: "Henkilöt"
+      conversations: "Keskustelut"
       help: "Apua"
       home: "Koti"
       log_out: "Kirjaudu ulos"
       mark_all_as_read: "Merkitse kaikki luetuiksi"
-      messages: "Viestit"
       notifications: "Ilmoitukset"
       profile: "Profiili"
       recent_notifications: "Tuoreet ilmoitukset"
@@ -67,23 +72,45 @@ fi:
     my_activity: "Oma toimintani"
     my_aspects: "Omat näkymäni"
     my_stream: "Virta"
+    notifications:
+      mark_read: "Merkitse luetuksi"
+      mark_unread: "Merkitse lukemattomaksi"
     people:
       not_found: "...ketään ei löytynyt."
     photo_uploader:
       completed: "<%= file %> suoritettu"
       empty: "Tiedosto {file} on tyhjä, valitse tiedostot uudelleen ilman kyseistä tiedostoa."
+      error: "On tapahtunut virhe lähetettäessä tiedostoa <%= file %>"
       invalid_ext: "Tiedostolla {file} on epäkelpo tiedostopääte. Vain {extensions} päätteet ovat sallittuja."
       looking_good: "OMG, näytät upealta!"
       size_error: "Tiedosto {file} on liian iso, suurin sallittu tiedostokoko on {sizeLimit}"
+    poll:
+      close_result: "Piilota tulokset"
+      count:
+        one: "<%=count%> ääni tähän mennessä"
+        other: "<%=count%> ääntä tähän mennessä"
+      result: "Tulos"
+      show_result: "Näytä tulokset"
+      vote: "Äänestä"
     publisher:
+      add_option: "Lisää vastaus"
       at_least_one_aspect: "Sinun täytyy julkaista vähintään yhdelle näkymälle."
-      limited: "Rajoitettu - viestisi näkyy vain ihmisille, joiden kanssa jaat"
+      limited: "Rajoitettu - julkaisusi näkyy vain ihmisille, joiden kanssa jaat"
       near_from: "Lähetetty sijainnista: <%= location %>"
-      public: "Julkinen - viestisi näkyvät kaikille mukaan lukien hakukoneet ja niiden tulokset"
+      option: "Vastaus <%= nr %>"
+      public: "Julkinen - julkaisusi näkyvät kaikille mukaan lukien hakukoneet ja niiden tulokset"
+      question: "Kysymys"
+    report:
+      name: "Tee ilmoitus"
+      prompt: "Ole hyvä, kirjoita syy:"
+      prompt_default: "loukkaavaa sisältöä"
+      status:
+        created: "Ilmoitus luotiin onnistuneesti"
+        exists: "Ilmoitus on jo olemassa"
     reshares:
-      duplicate: "Olet jo uudelleenjakanut viesti!"
-      post: "Jaa käyttäjän <%= name %> viesti?"
-      successful: "Viesti jaettiin onnistuneesti!"
+      duplicate: "Olet jo uudelleenjakanut tämän julkaisun!"
+      post: "Jaa käyttäjän <%= name %> julkaisu?"
+      successful: "Julkaisu jaettiin onnistuneesti!"
     search_for: "Etsi nimellä <%= name %>"
     show_more: "näytä lisää"
     stream:
@@ -95,7 +122,7 @@ fi:
         follow: "Seuraa"
         title: "#Seuratut Tagit"
       hide: "Piilota"
-      hide_nsfw_posts: "Piilota #nsfw-viestit"
+      hide_nsfw_posts: "Piilota #nsfw-julkaisut"
       like: "Tykkää"
       likes:
         few: "<%= count %> tykkäystä"
@@ -112,7 +139,7 @@ fi:
         other: "Näytä <%= count %> muuta kommenttia"
         two: "Näytä <%= count %> muuta kommenttia"
         zero: "Näytä <%= count %> muuta kommenttia"
-      original_post_deleted: "Lähettäjä on poistanut alkuperäisen viestin."
+      original_post_deleted: "Lähettäjä on poistanut alkuperäisen julkaisun."
       public: "Julkinen"
       reshare: "Jaa uudelleen"
       reshares:
@@ -122,7 +149,7 @@ fi:
         other: "<%= count %> uudelleenjakoa"
         two: "<%= count %> uudelleenjakoa"
         zero: "<%= count %> uudelleenjakoa"
-      show_nsfw_post: "Näytä viesti"
+      show_nsfw_post: "Näytä julkaisu"
       show_nsfw_posts: "Näytä kaikki"
       tags:
         follow: "Seuraa #<%= tag %>"
@@ -130,6 +157,7 @@ fi:
         stop_following: "Lopeta seuraamasta tagia #<%= tag %>"
       unfollow: "Lopeta seuraaminen"
       unlike: "Peru tykkäys"
+      via: "<%= provider %> kautta"
     tags:
       wasnt_that_interesting: "OK, #<%= tagName %> ei tainnut ollakaan kovin kiinnostava aihe..."
     timeago:
@@ -141,11 +169,12 @@ fi:
       minutes: "%d minuuttia"
       month: "noin kuukausi"
       months: "%d kuukautta"
-      prefixAgo: "sitten"
+      prefixAgo: ""
       prefixFromNow: "tästä alkaen"
       seconds: "alle minuutti"
       suffixAgo: "sitten"
       suffixFromNow: "tästä alkaen"
+      wordSeparator: " "
       year: "noin vuosi"
       years: "%d vuotta"
     videos:

@@ -8,7 +8,9 @@ class User < ActiveRecord::Base
   include Querying
   include SocialActions
 
-  scope :logged_in_since, lambda { |time| where('last_sign_in_at > ?', time) }
+  apply_simple_captcha :message => I18n.t('simple_captcha.message.failed'), :add_to_base => true
+
+  scope :logged_in_since, lambda { |time| where('last_seen > ?', time) }
   scope :monthly_actives, lambda { |time = Time.now| logged_in_since(time - 1.month) }
   scope :daily_actives, lambda { |time = Time.now| logged_in_since(time - 1.day) }
   scope :yearly_actives, lambda { |time = Time.now| logged_in_since(time - 1.year) }
@@ -16,7 +18,7 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :lockable, :lock_strategy => :none, :unlock_strategy => :none
+         :lockable, :lastseenable, :lock_strategy => :none, :unlock_strategy => :none
 
   before_validation :strip_and_downcase_username
   before_validation :set_current_language, :on => :create
@@ -66,6 +68,8 @@ class User < ActiveRecord::Base
   has_many :conversations, through: :conversation_visibilities, order: 'updated_at DESC'
 
   has_many :notifications, :foreign_key => :recipient_id
+
+  has_many :reports
 
   before_save :guard_unconfirmed_email,
               :save_person!
@@ -149,8 +153,11 @@ class User < ActiveRecord::Base
     self.hidden_shareables[share_type].present?
   end
 
+  # Copy the method provided by Devise to be able to call it later
+  # from a Sidekiq job
+  alias_method :send_reset_password_instructions!, :send_reset_password_instructions
+
   def send_reset_password_instructions
-    generate_reset_password_token! if should_generate_reset_token?
     Workers::ResetPassword.perform_async(self.id)
   end
 
@@ -240,8 +247,6 @@ class User < ActiveRecord::Base
   end
 
   def add_to_streams(post, aspects_to_insert)
-    inserted_aspect_ids = aspects_to_insert.map{|x| x.id}
-
     aspects_to_insert.each do |aspect|
       aspect << post
     end
@@ -417,14 +422,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def reorder_aspects(aspect_order)
-    i = 0
-    aspect_order.each do |id|
-      self.aspects.find(id).update_attributes({ :order_id => i })
-      i += 1
-    end
-  end
-
   # Generate public/private keys for User and associated Person
   def generate_keys
     key_size = (Rails.env == 'test' ? 512 : 4096)
@@ -476,6 +473,14 @@ class User < ActiveRecord::Base
     self.save(:validate => false)
   end
 
+  def sign_up
+    if AppConfig.settings.captcha.enable?
+      save_with_captcha
+    else
+      save
+    end
+  end
+  
   private
   def clearable_fields
     self.attributes.keys - ["id", "username", "encrypted_password",
