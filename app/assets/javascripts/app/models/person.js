@@ -2,12 +2,17 @@
 
 app.models.Person = Backbone.Model.extend({
   url: function() {
-    return Routes.person_path(this.get('guid'));
+    return Routes.person(this.get("guid"));
   },
 
   initialize: function() {
-    if( this.get('profile') )
-      this.profile = new app.models.Profile(this.get('profile'));
+    if (this.get("profile")) {
+      this.profile = new app.models.Profile(this.get("profile"));
+    }
+    if (this.get("contact")) {
+      this.contact = new app.models.Contact(this.get("contact"));
+      this.contact.person = this;
+    }
   },
 
   isSharing: function() {
@@ -25,7 +30,7 @@ app.models.Person = Backbone.Model.extend({
   },
 
   isBlocked: function() {
-    return (this.get('relationship') === 'blocked');
+    return (this.get("block") !== false);
   },
 
   block: function() {

@@ -10,6 +10,7 @@ available:
   da: "Dansk"
   de: "Deutsch"
   de_formal: "Deutsch (Sie)"
+  de-CH: "Deutsch (Schwiizerdütsch)"
   el: "Ελληνικά"
   en: "English"
   en_1337: "3n6l15h (English 1337)"
@@ -30,6 +31,7 @@ available:
   fr: "Français"
   fy: "Frysk"
   ga: "Gaeilge"
+  gd: "Gàidhlig"
   gl: "Galego"
   he: "עברית"
   hu: "magyar nyelv"
@@ -49,16 +51,18 @@ available:
   nds: "Niederdeutsch"
   nl: "Nederlands"
   nn: "Nynorsk"
+  oc: "Occitan"
   pa: "ਪੰਜਾਬੀ"
   pl: "polski"
   pt-PT: "Português (Portugal)"
   pt-BR: "Português (Brasil)"
   ro: "Română"
   ru: "Русский"
+  sc: "Sardu"
   si: "සිංහල"
   sk: "Slovenčina"
   sl: "Slovenščina"
-  sq: "gjuha shqipe"
+  sq: "Shqip"
   sr: "српски језик"
   sv: "Svenska"
   te: "తెలుగు"
@@ -115,6 +119,8 @@ fallbacks:
     - "ur"
   de_formal:
     - "de"
+  de-CH:
+    - "de"
   nds:
     - "de"
   art_nvi:
@@ -123,6 +129,10 @@ fallbacks:
     - "pt"
   pt-PT:
     - "pt"
+  oc:
+    - "it"
+  sc:
+    - "it"
 
 rtl:
   - "ar"

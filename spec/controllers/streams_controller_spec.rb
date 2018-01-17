@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 #   Copyright (c) 2010-2011, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
-
-require 'spec_helper'
 
 describe StreamsController, :type => :controller do
   before do
@@ -10,15 +10,9 @@ describe StreamsController, :type => :controller do
   end
 
   describe "#public" do
-    it 'will succeed if admin' do
-      Role.add_admin(alice.person)
+    it "succeeds" do
       get :public
       expect(response).to be_success
-    end
-
-    it 'will redirect if not' do
-      get :public
-      expect(response).to be_redirect
     end
   end
 

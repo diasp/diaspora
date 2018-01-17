@@ -1,5 +1,7 @@
+.message-content,
 .post-content {
-  .photo_attachments {
+  img { max-width: 100%; }
+  .photo-attachments {
     margin-top: 7px;
     padding-bottom: 10px;
     text-align: center;

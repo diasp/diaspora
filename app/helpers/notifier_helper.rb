@@ -1,13 +1,13 @@
+# frozen_string_literal: true
+
 module NotifierHelper
 
   # @param post [Post] The post object.
   # @param opts [Hash] Optional hash.  Accepts :length parameters.
   # @return [String] The formatted post.
   def post_message(post, opts={})
-    if !post.public?
-      I18n.translate 'notifier.a_private_message'
-    elsif post.respond_to? :message
-      post.message.plain_text_without_markdown
+    if post.respond_to? :message
+      post.message.try(:plain_text_without_markdown) || post_page_title(post)
     else
       I18n.translate 'notifier.a_post_you_shared'
     end

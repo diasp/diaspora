@@ -1,5 +1,4 @@
+# frozen_string_literal: true
+
 class HelpController < ApplicationController
-  def faq
-    gon.chatEnabled = AppConfig.chat.enabled?
-  end
 end

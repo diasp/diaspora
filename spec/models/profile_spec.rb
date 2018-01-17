@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 #   Copyright (c) 2010-2011, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
-
-require 'spec_helper'
 
 describe Profile, :type => :model do
   describe 'validation' do
@@ -46,7 +46,7 @@ describe Profile, :type => :model do
 
       it 'sets full name to first name' do
         @from_omniauth = {'name' => 'bob jones', 'description' => 'this is my bio', 'location' => 'sf', 'image' => 'http://cats.com/gif.gif'}
-        
+
         profile = Profile.new
         expect(profile.from_omniauth_hash(@from_omniauth)['first_name']).to eq('bob jones')
       end
@@ -117,68 +117,47 @@ describe Profile, :type => :model do
       profile = FactoryGirl.build(:profile, :location => "a"*255)
       expect(profile).to be_valid
     end
-   
+
     it "cannot be 256 characters" do
       profile = FactoryGirl.build(:profile, :location => "a"*256)
       expect(profile).not_to be_valid
     end
   end
 
-  describe '#image_url=' do
-    before do
-      @profile = FactoryGirl.build(:profile)
-      @profile.image_url = "http://tom.joindiaspora.com/images/user/tom.jpg"
-      @pod_url = AppConfig.pod_uri.to_s.chomp("/")
-    end
+  describe "image_url setters" do
+    %i(image_url image_url_small image_url_medium).each do |method|
+      describe "##{method}=" do
+        before do
+          @profile = FactoryGirl.build(:profile)
+          @profile.public_send("#{method}=", "http://tom.joindiaspora.com/images/user/tom.jpg")
+          @pod_url = AppConfig.pod_uri.to_s.chomp("/")
+        end
 
-    it 'ignores an empty string' do
-      expect {@profile.image_url = ""}.not_to change(@profile, :image_url)
-    end
+        it "saves nil when setting nil" do
+          @profile.public_send("#{method}=", nil)
+          expect(@profile[method]).to be_nil
+        end
 
-    it 'makes relative urls absolute' do
-      @profile.image_url = "/relative/url"
-      expect(@profile.image_url).to eq("#{@pod_url}/relative/url")
-    end
+        it "saves nil when setting an empty string" do
+          @profile.public_send("#{method}=", "")
+          expect(@profile[method]).to be_nil
+        end
 
-    it "doesn't change absolute urls" do
-      @profile.image_url = "http://not/a/relative/url"
-      expect(@profile.image_url).to eq("http://not/a/relative/url")
-    end
-  end
+        it "makes relative urls absolute" do
+          @profile.public_send("#{method}=", "/relative/url")
+          expect(@profile.public_send(method)).to eq("#{@pod_url}/relative/url")
+        end
 
-  describe '#from_xml' do
-    it 'should make a valid profile object' do
-      @profile = FactoryGirl.build(:profile)
-      @profile.tag_string = '#big #rafi #style'
-      xml = @profile.to_xml
+        it "doesn't change absolute urls" do
+          @profile.public_send("#{method}=", "http://not/a/relative/url")
+          expect(@profile.public_send(method)).to eq("http://not/a/relative/url")
+        end
 
-      new_profile = Profile.from_xml(xml.to_s)
-      expect(new_profile.tag_string).not_to be_blank
-      expect(new_profile.tag_string).to include('#rafi')
-    end
-  end
-  
-  describe 'serialization' do
-    let(:person) {FactoryGirl.build(:person,:diaspora_handle => "foobar" )}
-
-    it 'should include persons diaspora handle' do
-      xml = person.profile.to_diaspora_xml
-      expect(xml).to include "foobar"
-    end
-
-    it 'includes tags' do
-      person.profile.tag_string = '#one'
-      person.profile.build_tags
-      person.profile.save
-      xml = person.profile.to_diaspora_xml
-      expect(xml).to include "#one"
-    end
-    
-    it 'includes location' do
-      person.profile.location = 'Dark Side, Moon'
-      person.profile.save
-      xml = person.profile.to_diaspora_xml
-      expect(xml).to include "Dark Side, Moon"
+        it "saves the default-url as nil" do
+          @profile.public_send("#{method}=", "/assets/user/default.png")
+          expect(@profile[method]).to be_nil
+        end
+      end
     end
   end
 
@@ -204,7 +183,19 @@ describe Profile, :type => :model do
 
   describe '#subscribers' do
     it 'returns all non-pending contacts for a user' do
-      expect(bob.profile.subscribers(bob).map{|s| s.id}).to match_array([alice.person, eve.person].map{|s| s.id})
+      expect(bob.profile.subscribers.map(&:id)).to match_array([alice.person, eve.person].map(&:id))
+    end
+  end
+
+  describe "public?" do
+    it "is public if public_details is true" do
+      profile = FactoryGirl.build(:profile, public_details: true)
+      expect(profile.public?).to be_truthy
+    end
+
+    it "is not public if public_details is false" do
+      profile = FactoryGirl.build(:profile, public_details: false)
+      expect(profile.public?).to be_falsey
     end
   end
 
@@ -280,42 +271,6 @@ describe Profile, :type => :model do
     it_should_behave_like 'it is taggable'
   end
 
-  describe '#formatted_birthday' do
-    before do
-      @profile = FactoryGirl.build(:profile)
-      @profile_hash =  { 'year' => '2000', 'month' => '01', 'day' => '01' }
-      @profile.date = @profile_hash
-    end
-
-    it 'returns a formatted date' do
-      expect(@profile.formatted_birthday).to eq("January  1, 2000")
-    end
-
-    it 'removes nil year birthdays' do
-      @profile_hash.delete('year')
-      @profile.date = @profile_hash
-      expect(@profile.formatted_birthday).to eq('January  1')
-    end
-
-    it 'retuns nil if no birthday is set' do
-      @profile.date = {}
-      expect(@profile.formatted_birthday).to eq(nil)
-    end
-
-  end
-
-  describe '#receive' do
-    it 'updates the profile in place' do
-      local_luke, local_leia, remote_raphael = set_up_friends
-      new_profile = FactoryGirl.build :profile
-      expect{
-        new_profile.receive(local_leia, remote_raphael)
-      }.not_to change(Profile, :count)
-      expect(remote_raphael.last_name).to eq(new_profile.last_name)
-    end
-
-  end
-
   describe "#tombstone!" do
     before do
       @profile = bob.person.profile
@@ -334,25 +289,32 @@ describe Profile, :type => :model do
       expect(@profile.taggings).to receive(:delete_all)
       @profile.tombstone!
     end
+
+    it "doesn't recreate taggings if tag string was requested" do
+      @profile.tag_string
+      @profile.tombstone!
+      expect(@profile.taggings).to be_empty
+    end
   end
 
   describe "#clearable_fields" do
     it 'returns the current profile fields' do
       profile = FactoryGirl.build :profile
-      expect(profile.send(:clearable_fields).sort).to eq( 
+      expect(profile.send(:clearable_fields).sort).to eq(
       ["diaspora_handle",
-      "first_name",
-      "last_name",
-      "image_url",
-      "image_url_small",
-      "image_url_medium",
-      "birthday",
-      "gender",
-      "bio",
-      "searchable",
-      "nsfw",
-      "location",
-      "full_name"].sort
+       "first_name",
+       "last_name",
+       "image_url",
+       "image_url_small",
+       "image_url_medium",
+       "birthday",
+       "gender",
+       "bio",
+       "searchable",
+       "nsfw",
+       "location",
+       "public_details",
+       "full_name"].sort
       )
     end
   end

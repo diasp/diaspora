@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #   Copyright (c) 2010-2011, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
@@ -5,7 +7,6 @@
 class StreamsController < ApplicationController
   before_action :authenticate_user!
   before_action :save_selected_aspects, :only => :aspects
-  before_action :redirect_unless_admin, :only => :public
 
   layout proc { request.format == :mobile ? "application" : "with_header" }
 
@@ -29,7 +30,8 @@ class StreamsController < ApplicationController
   end
 
   def multi
-      stream_responder(Stream::Multi)
+    gon.preloads[:getting_started] = current_user.getting_started
+    stream_responder(Stream::Multi)
   end
 
   def commented
